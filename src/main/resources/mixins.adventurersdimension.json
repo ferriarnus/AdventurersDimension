@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "com.ferriarnus.adventurersdimension.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "mixins.adventurersdimension.refmap.json",
+  "mixins": [
+    "ServerLevelMixin"
+  ],
+  "minVersion": "0.8.4"
+}

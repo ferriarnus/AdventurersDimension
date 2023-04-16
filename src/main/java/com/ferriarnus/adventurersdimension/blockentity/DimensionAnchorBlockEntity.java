@@ -52,6 +52,7 @@ public class DimensionAnchorBlockEntity extends BlockEntity {
     private ResourceKey<Level> levelResourceKey;
     private ResourceLocation copied;
     private boolean player;
+    private long time;
 
     public DimensionAnchorBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(BlockEntityRegistry.DIMENSIONAL_ANCHOR.get(), pPos, pBlockState);
@@ -77,12 +78,14 @@ public class DimensionAnchorBlockEntity extends BlockEntity {
         };
         this.levelResourceKey = levelKey;
         ServerLevel newLevel = DimensionHelper.getOrCreateLevel(serverLevel.getServer(), levelKey, dimensionFactory);
-        newLevel.getDataStorage().computeIfAbsent(TimeSavedData::load, ()-> new TimeSavedData(20L,serverLevel), "time");
+        TimeSavedData savedtime = newLevel.getDataStorage().computeIfAbsent(TimeSavedData::load, () -> new TimeSavedData(time, serverLevel), "time");
+        time = savedtime.getTime();
     }
 
     public ServerLevel loadDimension(ServerLevel level) {
         this.levelResourceKey = null;
         this.copied = null;
+        this.time = 0;
         if (level.dimension().location().getNamespace().equals(AdventurersDimension.MODID)) { //Don't allow inception
             return null;
         }
@@ -93,6 +96,7 @@ public class DimensionAnchorBlockEntity extends BlockEntity {
             if (r.getLevelResourceKey() == null || !level.getServer().levelKeys().contains(r.getLevelResourceKey())) {
                 return;
             }
+            time = r.getTime();
             atomicReference.set(r.getLevelResourceKey());
             copied = r.getLevelResourceKey().location();
         });
@@ -121,9 +125,11 @@ public class DimensionAnchorBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
+        this.levelResourceKey = null;
         if (pTag.contains("levelResourceKey")) {
             this.levelResourceKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(pTag.getString("levelResourceKey")));
         }
+        this.copied = null;
         if (pTag.contains("copied")) {
             this.copied = new ResourceLocation(pTag.getString("copied"));
         }
@@ -161,5 +167,9 @@ public class DimensionAnchorBlockEntity extends BlockEntity {
             return lazy.cast();
         }
         return super.getCapability(cap, side);
+    }
+
+    public long getTime() {
+        return time;
     }
 }

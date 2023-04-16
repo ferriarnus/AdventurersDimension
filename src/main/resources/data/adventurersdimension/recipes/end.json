@@ -6,5 +6,6 @@
     }
   ],
   "dimension": "minecraft:the_end",
-  "player": false
+  "player": false,
+  "time": 1
 }

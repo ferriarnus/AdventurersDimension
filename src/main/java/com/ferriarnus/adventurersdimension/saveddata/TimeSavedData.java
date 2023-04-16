@@ -10,10 +10,12 @@ public class TimeSavedData extends SavedData {
 
     public TimeSavedData(Long time, ServerLevel level){
         this.time = level.getGameTime() + time;
+        this.setDirty();
     }
 
     public TimeSavedData(Long time){
         this.time = time;
+        this.setDirty();
     }
 
     public static TimeSavedData load(CompoundTag pCompoundTag) {
@@ -33,5 +35,6 @@ public class TimeSavedData extends SavedData {
 
     public void setgetTime(long time) {
         this.time = time;
+        this.setDirty();
     }
 }

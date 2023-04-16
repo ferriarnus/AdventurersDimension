@@ -6,5 +6,6 @@
     }
   ],
   "dimension": "minecraft:overworld",
-  "player": false
+  "player": false,
+  "time": 1
 }

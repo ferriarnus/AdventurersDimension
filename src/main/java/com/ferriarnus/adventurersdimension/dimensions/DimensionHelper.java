@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -159,6 +160,7 @@ public class DimensionHelper {
                     // that causes some minor logspam due to the player's world no longer being loaded
                     // teleporting the player this way instead avoids this
                     player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), respawnAngle, 0F);
+                    player.sendSystemMessage(Component.translatable("chat.adventurersdimension.collapse"));
                 }
                 // save the world now or it won't be saved later and data that may be wanted to be kept may be lost
                 removedLevel.save(null, false, removedLevel.noSave());

@@ -42,7 +42,7 @@ public class AdventurersDimension
     static void removeLevel(TickEvent.LevelTickEvent event) {
         if (event.level instanceof ServerLevel serverLevel) {
             if (serverLevel.dimension().location().getNamespace().equals(MODID)) {
-                TimeSavedData time = serverLevel.getDataStorage().computeIfAbsent(TimeSavedData::load, () -> new TimeSavedData(20L, serverLevel), "time");
+                TimeSavedData time = serverLevel.getDataStorage().get(TimeSavedData::load, "time");
                 if (time.getTime() <= serverLevel.getGameTime()) {
                     DimensionHelper.markDimensionForUnregistration(serverLevel.getServer(), serverLevel.dimension());
                 }

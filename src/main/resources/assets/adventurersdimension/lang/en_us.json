@@ -9,6 +9,10 @@
   "screen.adventurersdimension.dimensionalanchor.waiting" : "Click confirm to select the dimension",
   "screen.adventurersdimension.dimensionalanchor.wrongdimension" : "You can not use it in this dimension",
 
-  "chat.adventurersdimension.wrongdimension" : "You can not use it in this dimension!"
+  "chat.adventurersdimension.wrongdimension" : "You can not use it in this dimension!",
+  "chat.adventurersdimension.collapse": "The Dimension has collapsed!",
+
+  "tooltip.adventurersdimension.dimension": "Dimension: %1$s",
+  "tooltip.adventurersdimension.time": "Time left: %1$s minutes"
 
 }

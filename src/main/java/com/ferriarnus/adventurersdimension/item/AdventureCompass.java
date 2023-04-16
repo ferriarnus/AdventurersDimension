@@ -2,10 +2,12 @@ package com.ferriarnus.adventurersdimension.item;
 
 import com.ferriarnus.adventurersdimension.blockentity.DimensionAnchorBlockEntity;
 import com.ferriarnus.adventurersdimension.dimensions.SpawnHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -17,16 +19,35 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
+import java.util.List;
 
 public class AdventureCompass extends Item {
     public AdventureCompass(Properties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        if (pStack.getOrCreateTag().contains("adventure")) {
+            CompoundTag adventure = pStack.getOrCreateTag().getCompound("adventure");
+            String level = adventure.getString("to");
+            long time = adventure.getLong("time");
+            pTooltipComponents.add(1, Component.translatable("tooltip.adventurersdimension.dimension", level).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+            long l = (time - pLevel.getGameTime())/(20*60);
+            if (l >= 0) {
+                pTooltipComponents.add(2, Component.translatable("tooltip.adventurersdimension.time", l+"").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+            }
+
+        }
     }
 
     @Override
@@ -41,6 +62,7 @@ public class AdventureCompass extends Item {
                 tag.putLong("pos", pContext.getClickedPos().asLong());
                 tag.putString("level", level.dimension().location().toString());
                 tag.putString("to", levelResourceKey.location().toString());
+                tag.putLong("time", anchor.getTime());
                 stack.getOrCreateTag().put("adventure", tag);
                 ServerLevel newLevel = level.getServer().getLevel(levelResourceKey);
                 Player player = pContext.getPlayer();
@@ -61,7 +83,7 @@ public class AdventureCompass extends Item {
 
     @Override
     public UseAnim getUseAnimation(ItemStack pStack) {
-        return UseAnim.CUSTOM;
+        return UseAnim.CROSSBOW;
     }
 
     @Override

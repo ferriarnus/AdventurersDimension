@@ -24,11 +24,14 @@ public class DimensionRecipe implements Recipe<RecipeWrapper> {
     private final ResourceKey<Level> levelResourceKey;
     private final boolean player;
 
-    public DimensionRecipe(ResourceLocation id, Ingredient input, ResourceKey<Level> levelResourceKey, boolean player) {
+    private final long time;
+
+    public DimensionRecipe(ResourceLocation id, Ingredient input, ResourceKey<Level> levelResourceKey, boolean player, long time) {
         this.id = id;
         this.input = input;
         this.levelResourceKey = levelResourceKey;
         this.player = player;
+        this.time = time;
     }
 
     @Override
@@ -79,6 +82,10 @@ public class DimensionRecipe implements Recipe<RecipeWrapper> {
         return player;
     }
 
+    public long getTime() {
+        return time;
+    }
+
     static class Serializer implements RecipeSerializer<DimensionRecipe> {
 
         @Override
@@ -86,7 +93,8 @@ public class DimensionRecipe implements Recipe<RecipeWrapper> {
             Ingredient input = Ingredient.fromJson(pSerializedRecipe.get("input"));
             ResourceKey<Level> levelResourceKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(pSerializedRecipe.get("dimension").getAsString()));
             boolean player = pSerializedRecipe.get("player").getAsBoolean();
-            return new DimensionRecipe(pRecipeId, input, levelResourceKey, player);
+            long time = (long) (pSerializedRecipe.get("time").getAsFloat() * 24000L);
+            return new DimensionRecipe(pRecipeId, input, levelResourceKey, player, time);
         }
 
         @Override
@@ -94,7 +102,8 @@ public class DimensionRecipe implements Recipe<RecipeWrapper> {
             Ingredient input = Ingredient.fromNetwork(pBuffer);
             ResourceKey<Level> levelResourceKey = pBuffer.readResourceKey(Registries.DIMENSION);
             boolean player = pBuffer.readBoolean();
-            return new DimensionRecipe(pRecipeId, input, levelResourceKey, player);
+            long time = pBuffer.readLong();
+            return new DimensionRecipe(pRecipeId, input, levelResourceKey, player, time);
         }
 
         @Override
@@ -102,6 +111,7 @@ public class DimensionRecipe implements Recipe<RecipeWrapper> {
             pRecipe.input.toNetwork(pBuffer);
             pBuffer.writeResourceKey(pRecipe.levelResourceKey);
             pBuffer.writeBoolean(pRecipe.player);
+            pBuffer.writeLong(pRecipe.time);
         }
     }
 }

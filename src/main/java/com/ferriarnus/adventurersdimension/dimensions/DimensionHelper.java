@@ -192,30 +192,23 @@ public class DimensionHelper {
             LayeredRegistryAccess<RegistryLayer> registries = server.registries();
             RegistryAccess.ImmutableRegistryAccess composite = (RegistryAccess.ImmutableRegistryAccess)registries.compositeAccess();
 
-            // @todo 1.19.3
-//            Map<? extends ResourceKey<?>,? extends Registry<?>> map = composite.registries;
+            Map<ResourceKey<? extends Registry<?>>, Registry<?>> regmap = new HashMap<>(composite.registries);
+            ResourceKey<? extends Registry<?>> key = ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("root")),new ResourceLocation("dimension"));
+            MappedRegistry<LevelStem> oldRegistry = (MappedRegistry<LevelStem>) regmap.get(key);
+            Lifecycle oldLifecycle = oldRegistry.registryLifecycle();
 
-            Map<ResourceKey<?>,Registry<?>> hashMap = new HashMap<>(); // @todo 1.19.3 map
-            ResourceKey<?> key = ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("root")),new ResourceLocation("dimension"));
-
-            final Registry<LevelStem> oldRegistry = (Registry<LevelStem>) hashMap.get(key);
-            Lifecycle oldLifecycle = null; // @todo 1.19.3 AT ((MappedRegistry<LevelStem>)oldRegistry).registryLifecycle;
-            final Registry<LevelStem> newRegistry = new MappedRegistry<>(Registries.LEVEL_STEM, oldLifecycle, false);
-
+            final MappedRegistry<LevelStem> newRegistry = new MappedRegistry<>(Registries.LEVEL_STEM, oldLifecycle, false);
             for (var entry : oldRegistry.entrySet()) {
                 final ResourceKey<LevelStem> oldKey = entry.getKey();
                 final ResourceKey<Level> oldLevelKey = ResourceKey.create(Registries.DIMENSION, oldKey.location());
                 final LevelStem dimension = entry.getValue();
                 if (oldKey != null && dimension != null && !removedLevelKeys.contains(oldLevelKey)) {
-//                    newRegistry.register(oldKey, dimension, oldRegistry.lifecycle(dimension));
-                    Registry.register(newRegistry, oldKey, dimension);   // @todo 1.18.2 is this right?
+                    Registry.register(newRegistry, oldKey, dimension);
                 }
             }
-            hashMap.replace(key, newRegistry);
-
-            // then replace the old registry with the new registry
-            // @todo 1.19.3
-//            composite.registries = hashMap;
+            regmap.replace(key, newRegistry);
+            Map<? extends ResourceKey<? extends Registry<?>>, ? extends Registry<?>> newmap = (Map<? extends ResourceKey<? extends Registry<?>>, ? extends Registry<?>>) regmap;
+            composite.registries = newmap;
 
             // update the server's levels so dead levels don't get ticked
             server.markWorldsDirty();

@@ -1,28 +1,28 @@
 package com.ferriarnus.adventurersdimension.block;
 
 
-import com.ferriarnus.adventurersdimension.dimensions.DimensionHelper;
+import com.ferriarnus.adventurersdimension.blockentity.BlockEntityRegistry;
+import com.ferriarnus.adventurersdimension.blockentity.DimensionAnchorBlockEntity;
+import com.ferriarnus.adventurersdimension.menu.DimensionalAnchorMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-
-public class DimensionAnchorBlock extends Block {
+public class DimensionAnchorBlock extends Block implements EntityBlock {
 
     public DimensionAnchorBlock(Properties pProperties) {
         super(pProperties);
@@ -30,18 +30,31 @@ public class DimensionAnchorBlock extends Block {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel instanceof ServerLevel serverLevel) {
-            ServerLevel dimension = serverLevel.getServer().getLevel(Level.OVERWORLD);
-            ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("test"));
-            Holder<DimensionType> typeHolder = dimension.dimensionTypeRegistration();
-            BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory =
-                    (minecraftServer, levelStemResourceKey) -> {
-                        return new LevelStem(typeHolder, dimension.getChunkSource().getGenerator());
-                    };
-            ServerLevel newDimension = DimensionHelper.getOrCreateLevel(serverLevel.getServer(), levelKey, dimensionFactory);
-            //pPlayer.changeDimension(newDimension);
+        if (pLevel.isClientSide) {
+            return InteractionResult.SUCCESS;
+        } else {
+            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+            if (blockentity instanceof DimensionAnchorBlockEntity anchor) {
+                MenuProvider p = new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return Component.translatable("screen.adventurersdimension.dimensionanchor");
+                    }
 
+                    @Override
+                    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+                        return new DimensionalAnchorMenu(pContainerId, pInventory, pPos, pLevel);
+                    }
+                };
+                NetworkHooks.openScreen((ServerPlayer) pPlayer, p, blockentity.getBlockPos());
+            }
+            return InteractionResult.CONSUME;
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return BlockEntityRegistry.DIMENSIONAL_ANCHOR.get().create(pPos, pState);
     }
 }

@@ -1,0 +1,10 @@
+{
+  "type": "adventurersdimension:dimension",
+  "input": [
+    {
+      "item": "minecraft:grass_block"
+    }
+  ],
+  "dimension": "minecraft:overworld",
+  "player": false
+}

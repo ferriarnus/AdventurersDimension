@@ -1,0 +1,10 @@
+{
+  "type": "adventurersdimension:dimension",
+  "input": [
+    {
+      "item": "minecraft:netherrack"
+    }
+  ],
+  "dimension": "minecraft:the_nether",
+  "player": false
+}

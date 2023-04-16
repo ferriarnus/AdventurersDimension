@@ -1,6 +1,6 @@
-package com.ferriarnus.adventurersdimension.dimensions;
+package com.ferriarnus.adventurersdimension.network;
 
-import com.ferriarnus.adventurersdimension.network.AdventureNetwork;
+import com.ferriarnus.adventurersdimension.dimensions.DimensionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.Registries;

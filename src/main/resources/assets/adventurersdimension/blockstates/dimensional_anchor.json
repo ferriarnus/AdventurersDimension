@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "adventurersdimension:block/dimensional_anchor"
+    }
+  }
+}

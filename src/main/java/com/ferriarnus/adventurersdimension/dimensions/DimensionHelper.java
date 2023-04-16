@@ -1,5 +1,6 @@
 package com.ferriarnus.adventurersdimension.dimensions;
 
+import com.ferriarnus.adventurersdimension.network.PacketSyncDimensionListChanges;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;

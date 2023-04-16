@@ -1,0 +1,10 @@
+{
+  "type": "adventurersdimension:dimension",
+  "input": [
+    {
+      "item": "minecraft:end_stone"
+    }
+  ],
+  "dimension": "minecraft:the_end",
+  "player": false
+}

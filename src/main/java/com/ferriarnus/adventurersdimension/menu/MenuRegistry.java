@@ -15,5 +15,5 @@ public class MenuRegistry {
         MENUS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<MenuType<DimensionalAnchorMenu>> DIMENSIONAL_ANCHOR = MENUS.register("dimensional_anchor", () -> IForgeMenuType.create(DimensionalAnchorMenu::new));
+    public static final RegistryObject<MenuType<AdventurersWorkbenchMenu>> ADVENTURERS_WORKBENCH = MENUS.register("adventurers_workbench", () -> IForgeMenuType.create(AdventurersWorkbenchMenu::new));
 }

@@ -13,6 +13,6 @@ public class ScreenRegistry {
 
     @SubscribeEvent
     static void register(FMLClientSetupEvent event) {
-        MenuScreens.register(MenuRegistry.DIMENSIONAL_ANCHOR.get(), DilmensionalAnchorScreen::new);
+        MenuScreens.register(MenuRegistry.ADVENTURERS_WORKBENCH.get(), AdventurersWorkbenchScreen::new);
     }
 }

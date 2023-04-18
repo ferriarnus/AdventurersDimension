@@ -1,13 +1,12 @@
 package com.ferriarnus.adventurersdimension.item;
 
-import com.ferriarnus.adventurersdimension.blockentity.DimensionAnchorBlockEntity;
+import com.ferriarnus.adventurersdimension.blockentity.AdventurersWorkbenchBlockEntity;
 import com.ferriarnus.adventurersdimension.dimensions.SpawnHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -55,7 +54,7 @@ public class AdventureCompass extends Item {
         Level level = pContext.getLevel();
         ItemStack stack = pContext.getItemInHand();
         BlockEntity be = level.getBlockEntity(pContext.getClickedPos());
-        if (be instanceof DimensionAnchorBlockEntity anchor) {
+        if (be instanceof AdventurersWorkbenchBlockEntity anchor) {
             ResourceKey<Level> levelResourceKey = anchor.getLevelResourceKey();
             if (levelResourceKey != null && !level.isClientSide) {
                 CompoundTag tag = new CompoundTag();
@@ -66,6 +65,11 @@ public class AdventureCompass extends Item {
                 stack.getOrCreateTag().put("adventure", tag);
                 ServerLevel newLevel = level.getServer().getLevel(levelResourceKey);
                 Player player = pContext.getPlayer();
+                if (newLevel == null) {
+                    anchor.remake((ServerLevel) level);
+                    player.sendSystemMessage(Component.translatable("chat.adventurersdimansion.remaking"));
+                    return InteractionResult.SUCCESS;
+                }
                 BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(player.position().x(), player.position().y(), player.position().z());
                 SpawnHelper.getSpawn(newLevel, pos);
                 player.teleportTo(newLevel, pos.getX(), pos.getY(), pos.getZ(), Collections.emptySet(), player.getYRot(), player.getXRot());
@@ -83,7 +87,7 @@ public class AdventureCompass extends Item {
 
     @Override
     public UseAnim getUseAnimation(ItemStack pStack) {
-        return UseAnim.CROSSBOW;
+        return UseAnim.CUSTOM;
     }
 
     @Override
@@ -111,11 +115,17 @@ public class AdventureCompass extends Item {
                 ServerLevel returnLevel = serverLevel.getServer().getLevel(levelkey);
                 if (returnLevel == null) {
                     if (pLivingEntity instanceof ServerPlayer player) {
-                        pos = player.getRespawnPosition();
-                        returnLevel = serverLevel.getServer().getLevel(player.getRespawnDimension());
+                        //pos = player.getRespawnPosition();
+                        //returnLevel = serverLevel.getServer().getLevel(player.getRespawnDimension());
+                        serverLevel.getServer().getPlayerList().respawn(player, true);
+                        return pStack;
                     }
                 }
                 pLivingEntity.teleportTo(returnLevel, pos.getX(), pos.getY() + 1.2, pos.getZ(), Collections.emptySet(), pLivingEntity.getXRot(), pLivingEntity.getYRot() );
+            } else {
+                if (pLivingEntity instanceof ServerPlayer player) {
+                    player.sendSystemMessage(Component.translatable("chat.adventurersdimension.wrongdimension"));
+                }
             }
         }
         return pStack;

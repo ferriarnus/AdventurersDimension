@@ -2,8 +2,8 @@ package com.ferriarnus.adventurersdimension.block;
 
 
 import com.ferriarnus.adventurersdimension.blockentity.BlockEntityRegistry;
-import com.ferriarnus.adventurersdimension.blockentity.DimensionAnchorBlockEntity;
-import com.ferriarnus.adventurersdimension.menu.DimensionalAnchorMenu;
+import com.ferriarnus.adventurersdimension.blockentity.AdventurersWorkbenchBlockEntity;
+import com.ferriarnus.adventurersdimension.menu.AdventurersWorkbenchMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,9 +22,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class DimensionAnchorBlock extends Block implements EntityBlock {
+public class AdventurersWorkbench extends Block implements EntityBlock {
 
-    public DimensionAnchorBlock(Properties pProperties) {
+    public AdventurersWorkbench(Properties pProperties) {
         super(pProperties);
     }
 
@@ -34,16 +34,16 @@ public class DimensionAnchorBlock extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
         } else {
             BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof DimensionAnchorBlockEntity anchor) {
+            if (blockentity instanceof AdventurersWorkbenchBlockEntity anchor) {
                 MenuProvider p = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return Component.translatable("screen.adventurersdimension.dimensionanchor");
+                        return Component.translatable("screen.adventurersdimension.adventurers_workbench");
                     }
 
                     @Override
                     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                        return new DimensionalAnchorMenu(pContainerId, pInventory, pPos, pLevel);
+                        return new AdventurersWorkbenchMenu(pContainerId, pInventory, pPos, pLevel);
                     }
                 };
                 NetworkHooks.openScreen((ServerPlayer) pPlayer, p, blockentity.getBlockPos());
@@ -55,6 +55,6 @@ public class DimensionAnchorBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return BlockEntityRegistry.DIMENSIONAL_ANCHOR.get().create(pPos, pState);
+        return BlockEntityRegistry.ADVENTURERS_WORKBENCH.get().create(pPos, pState);
     }
 }

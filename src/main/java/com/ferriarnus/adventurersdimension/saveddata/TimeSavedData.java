@@ -33,7 +33,7 @@ public class TimeSavedData extends SavedData {
         return time;
     }
 
-    public void setgetTime(long time) {
+    public void setTime(long time) {
         this.time = time;
         this.setDirty();
     }

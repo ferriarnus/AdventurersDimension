@@ -43,7 +43,7 @@ public class AdventurersDimension
         if (event.level instanceof ServerLevel serverLevel) {
             if (serverLevel.dimension().location().getNamespace().equals(MODID)) {
                 TimeSavedData time = serverLevel.getDataStorage().get(TimeSavedData::load, "time");
-                if (time.getTime() <= serverLevel.getGameTime()) {
+                if (time.getTime() <= serverLevel.getGameTime() && time.getTime() > 0) {
                     DimensionHelper.markDimensionForUnregistration(serverLevel.getServer(), serverLevel.dimension());
                 }
             }

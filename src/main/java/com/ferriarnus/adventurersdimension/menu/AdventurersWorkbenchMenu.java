@@ -1,6 +1,6 @@
 package com.ferriarnus.adventurersdimension.menu;
 
-import com.ferriarnus.adventurersdimension.blockentity.DimensionAnchorBlockEntity;
+import com.ferriarnus.adventurersdimension.blockentity.AdventurersWorkbenchBlockEntity;
 import com.ferriarnus.adventurersdimension.config.AdventureConfig;
 import com.ferriarnus.adventurersdimension.network.AdventureNetwork;
 import com.ferriarnus.adventurersdimension.network.CreateDimensionPacket;
@@ -16,19 +16,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.network.PacketDistributor;
 
-public class DimensionalAnchorMenu extends AbstractContainerMenu {
+public class AdventurersWorkbenchMenu extends AbstractContainerMenu {
     private final Inventory inventory;
-    private DimensionAnchorBlockEntity anchor;
+    private AdventurersWorkbenchBlockEntity anchor;
 
-    public DimensionalAnchorMenu(int pContainerId, Inventory inv, FriendlyByteBuf data) {
+    public AdventurersWorkbenchMenu(int pContainerId, Inventory inv, FriendlyByteBuf data) {
         this(pContainerId, inv, data.readBlockPos(), inv.player.level);
     }
 
-    public DimensionalAnchorMenu(int pContainerId, Inventory inv, BlockPos pos, Level level) {
-        super(MenuRegistry.DIMENSIONAL_ANCHOR.get(), pContainerId);
+    public AdventurersWorkbenchMenu(int pContainerId, Inventory inv, BlockPos pos, Level level) {
+        super(MenuRegistry.ADVENTURERS_WORKBENCH.get(), pContainerId);
         this.inventory = inv;
         BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof DimensionAnchorBlockEntity anchor) {
+        if (be instanceof AdventurersWorkbenchBlockEntity anchor) {
             this.anchor = anchor;
         }
 
@@ -57,7 +57,7 @@ public class DimensionalAnchorMenu extends AbstractContainerMenu {
         AdventureNetwork.INSTANCE.send(PacketDistributor.SERVER.noArg(), new CreateDimensionPacket(anchor.getBlockPos(), anchor.getLevel().dimension()));
     }
 
-    public DimensionAnchorBlockEntity getAnchor() {
+    public AdventurersWorkbenchBlockEntity getAnchor() {
         return anchor;
     }
 

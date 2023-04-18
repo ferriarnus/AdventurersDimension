@@ -21,6 +21,6 @@ public class BlockRegistry {
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<DimensionAnchorBlock> DIMENSION_ANCHOR = BLOCKS.register("dimensional_anchor", () -> new DimensionAnchorBlock(BlockBehaviour.Properties.of(Material.STONE)));
-    public static final RegistryObject<BlockItem> DIMENSION_ANCHOR_ITEM = ITEMS.register("dimensional_anchor", () -> new BlockItem(DIMENSION_ANCHOR.get(), new Item.Properties()));
+    public static final RegistryObject<AdventurersWorkbench> ADVENTURERS_WORKBENCH = BLOCKS.register("adventurers_workbench", () -> new AdventurersWorkbench(BlockBehaviour.Properties.of(Material.STONE)));
+    public static final RegistryObject<BlockItem> ADVENTURERS_WORKBENCH_ITEM = ITEMS.register("adventurers_workbench", () -> new BlockItem(ADVENTURERS_WORKBENCH.get(), new Item.Properties()));
 }

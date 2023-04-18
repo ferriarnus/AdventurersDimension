@@ -1,6 +1,7 @@
 package com.ferriarnus.adventurersdimension.blockentity;
 
 import com.ferriarnus.adventurersdimension.AdventurersDimension;
+import com.ferriarnus.adventurersdimension.config.AdventureConfig;
 import com.ferriarnus.adventurersdimension.dimensions.DimensionHelper;
 import com.ferriarnus.adventurersdimension.recipe.DimensionRecipe;
 import com.ferriarnus.adventurersdimension.recipe.RecipeRegistry;
@@ -36,7 +37,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
-public class DimensionAnchorBlockEntity extends BlockEntity {
+public class AdventurersWorkbenchBlockEntity extends BlockEntity {
 
     private ItemStackHandler handler = new ItemStackHandler(1) {
         @Override
@@ -54,14 +55,37 @@ public class DimensionAnchorBlockEntity extends BlockEntity {
     private boolean player;
     private long time;
 
-    public DimensionAnchorBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(BlockEntityRegistry.DIMENSIONAL_ANCHOR.get(), pPos, pBlockState);
+    public AdventurersWorkbenchBlockEntity(BlockPos pPos, BlockState pBlockState) {
+        super(BlockEntityRegistry.ADVENTURERS_WORKBENCH.get(), pPos, pBlockState);
     }
 
     public void confirmLevel(ServerLevel serverLevel, ServerPlayer player) {
-        ServerLevel oldLevel = loadDimension(serverLevel);
-        makeOrLoadLevel(oldLevel, player);
-        serverLevel.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        if (player.hasPermissions(AdventureConfig.PERMISSION.get())) {
+            ServerLevel oldLevel = loadDimension(serverLevel);
+            makeOrLoadLevel(oldLevel, player);
+            serverLevel.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    public void remake(ServerLevel serverLevel) {
+        if (levelResourceKey != null && copied != null) {
+            ServerLevel oldLevel = serverLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, copied));
+            if (oldLevel == null) {
+                return;
+            }
+            Holder<DimensionType> typeHolder = serverLevel.dimensionTypeRegistration();
+            BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory =
+                    (minecraftServer, levelStemResourceKey) -> {
+                        return new LevelStem(typeHolder, oldLevel.getChunkSource().getGenerator());
+                    };
+            ServerLevel newLevel = DimensionHelper.getOrCreateLevel(serverLevel.getServer(), levelResourceKey, dimensionFactory);
+            TimeSavedData savedtime = newLevel.getDataStorage().computeIfAbsent(TimeSavedData::load, () -> new TimeSavedData(time, serverLevel), "time");
+            if (time == -1) { //Infinite time
+                savedtime.setTime(time);
+            }
+            time = savedtime.getTime();
+        }
+
     }
 
     /**

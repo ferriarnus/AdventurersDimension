@@ -16,5 +16,5 @@ public class BlockEntityRegistry {
         BLOCK_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static final RegistryObject<BlockEntityType<DimensionAnchorBlockEntity>> DIMENSIONAL_ANCHOR = BLOCK_ENTITIES.register("dimensonal_anchor", () -> BlockEntityType.Builder.of(DimensionAnchorBlockEntity::new, BlockRegistry.DIMENSION_ANCHOR.get()).build(null));
+    public static final RegistryObject<BlockEntityType<AdventurersWorkbenchBlockEntity>> ADVENTURERS_WORKBENCH = BLOCK_ENTITIES.register("adventurers_workbench", () -> BlockEntityType.Builder.of(AdventurersWorkbenchBlockEntity::new, BlockRegistry.ADVENTURERS_WORKBENCH.get()).build(null));
 }

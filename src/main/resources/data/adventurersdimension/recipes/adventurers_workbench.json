@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "wmw",
+    "cda",
+    "wbw"
+  ],
+  "key": {
+    "w" : {
+      "tag": "minecraft:planks"
+    },
+    "m" : {
+      "item": "minecraft:map"
+    },
+    "c" : {
+      "item": "minecraft:clock"
+    },
+    "a" : {
+      "item": "minecraft:compass"
+    },
+    "b" : {
+      "item": "minecraft:writable_book"
+    },
+    "d" : {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "adventurersdimension:adventurers_workbench"
+  }
+}

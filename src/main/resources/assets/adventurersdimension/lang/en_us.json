@@ -1,16 +1,17 @@
 {
-  "block.adventurersdimension.dimensional_anchor": "Dimensional Anchor",
+  "block.adventurersdimension.adventurers_workbench": "Adventurers Workbench",
   "item.adventurersdimension.adventure_compass": "Adventurers Compass",
 
-  "screen.adventurersdimension.dimensionanchor": "Dimensional Anchor",
-  "screen.adventurersdimension.dimensionalanchor.loaded": "Loaded dimension",
-  "screen.adventurersdimension.dimensionalanchor.none" : "No dimension",
-  "screen.adventurersdimension.dimensionalanchor.ready": "Ready",
-  "screen.adventurersdimension.dimensionalanchor.waiting" : "Click confirm to select the dimension",
-  "screen.adventurersdimension.dimensionalanchor.wrongdimension" : "You can not use it in this dimension",
+  "screen.adventurersdimension.adventurers_workbench": "Adventurers Workbench",
+  "screen.adventurersdimension.adventurers_workbench.loaded": "Loaded dimension",
+  "screen.adventurersdimension.adventurers_workbench.none" : "No dimension",
+  "screen.adventurersdimension.adventurers_workbench.ready": "Ready",
+  "screen.adventurersdimension.adventurers_workbench.waiting" : "Click confirm to select the dimension",
+  "screen.adventurersdimension.adventurers_workbench.wrongdimension" : "You can not use it in this dimension",
 
   "chat.adventurersdimension.wrongdimension" : "You can not use it in this dimension!",
   "chat.adventurersdimension.collapse": "The Dimension has collapsed!",
+  "chat.adventurersdimansion.remaking": "The dimension is be remade, click again to transfer",
 
   "tooltip.adventurersdimension.dimension": "Dimension: %1$s",
   "tooltip.adventurersdimension.time": "Time left: %1$s minutes"

@@ -1,6 +1,6 @@
 package com.ferriarnus.adventurersdimension.network;
 
-import com.ferriarnus.adventurersdimension.blockentity.DimensionAnchorBlockEntity;
+import com.ferriarnus.adventurersdimension.blockentity.AdventurersWorkbenchBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,7 +37,7 @@ public class CreateDimensionPacket {
         contextGetter.get().enqueueWork(() -> {
             MinecraftServer server = contextGetter.get().getSender().server;
             BlockEntity be = server.getLevel(packet.level).getBlockEntity(packet.pos);
-            if (be instanceof DimensionAnchorBlockEntity anchor) {
+            if (be instanceof AdventurersWorkbenchBlockEntity anchor) {
                 anchor.confirmLevel(server.getLevel(packet.level), contextGetter.get().getSender());
             }
         });

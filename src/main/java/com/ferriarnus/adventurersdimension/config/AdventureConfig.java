@@ -9,7 +9,7 @@ public class AdventureConfig {
     public static ForgeConfigSpec.ConfigValue<Integer> PERMISSION;
 
     static {
-        PERMISSION = BUILDER.define("Permission", 3);
+        PERMISSION = BUILDER.define("Permission", 4);
         SPEC = BUILDER.build();
     }
 }

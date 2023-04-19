@@ -1,5 +1,7 @@
 package com.ferriarnus.adventurersdimension.item;
 
+import com.ferriarnus.adventurersdimension.block.AdventurersWorkbench;
+import com.ferriarnus.adventurersdimension.block.BlockRegistry;
 import com.ferriarnus.adventurersdimension.blockentity.AdventurersWorkbenchBlockEntity;
 import com.ferriarnus.adventurersdimension.dimensions.SpawnHelper;
 import net.minecraft.ChatFormatting;
@@ -23,6 +25,8 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -53,12 +57,17 @@ public class AdventureCompass extends Item {
     public InteractionResult useOn(UseOnContext pContext) {
         Level level = pContext.getLevel();
         ItemStack stack = pContext.getItemInHand();
-        BlockEntity be = level.getBlockEntity(pContext.getClickedPos());
+        BlockState blockState = level.getBlockState(pContext.getClickedPos());
+        BlockPos pos = pContext.getClickedPos();
+        if (blockState.is(BlockRegistry.ADVENTURERS_WORKBENCH.get())) {
+            pos = blockState.getValue(AdventurersWorkbench.HALF) == DoubleBlockHalf.LOWER? pos : pos.below();
+        }
+        BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof AdventurersWorkbenchBlockEntity anchor) {
             ResourceKey<Level> levelResourceKey = anchor.getLevelResourceKey();
             if (levelResourceKey != null && !level.isClientSide) {
                 CompoundTag tag = new CompoundTag();
-                tag.putLong("pos", pContext.getClickedPos().asLong());
+                tag.putLong("pos", pos.above().asLong());
                 tag.putString("level", level.dimension().location().toString());
                 tag.putString("to", levelResourceKey.location().toString());
                 tag.putLong("time", anchor.getTime());
@@ -70,9 +79,9 @@ public class AdventureCompass extends Item {
                     player.sendSystemMessage(Component.translatable("chat.adventurersdimansion.remaking"));
                     return InteractionResult.SUCCESS;
                 }
-                BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(player.position().x(), player.position().y(), player.position().z());
-                SpawnHelper.getSpawn(newLevel, pos);
-                player.teleportTo(newLevel, pos.getX(), pos.getY(), pos.getZ(), Collections.emptySet(), player.getYRot(), player.getXRot());
+                BlockPos.MutableBlockPos spawnPos = new BlockPos.MutableBlockPos(player.position().x(), player.position().y(), player.position().z());
+                SpawnHelper.getSpawn(newLevel, spawnPos);
+                player.teleportTo(newLevel, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Collections.emptySet(), player.getYRot(), player.getXRot());
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.CONSUME;

@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,6 +48,11 @@ public class AdventurersWorkbenchBlockEntity extends BlockEntity {
                 loadDimension(serverLevel);
             }
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+
+        @Override
+        protected int getStackLimit(int slot, @NotNull ItemStack stack) {
+            return 1;
         }
     };
     private LazyOptional<IItemHandler> lazy = LazyOptional.of(()-> handler);

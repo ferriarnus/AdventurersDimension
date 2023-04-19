@@ -1,6 +1,9 @@
 {
   "variants": {
-    "": {
+    "half=lower": {
+      "model": "adventurersdimension:block/adventurers_workbench"
+    },
+    "half=upper": {
       "model": "adventurersdimension:block/adventurers_workbench"
     }
   }
